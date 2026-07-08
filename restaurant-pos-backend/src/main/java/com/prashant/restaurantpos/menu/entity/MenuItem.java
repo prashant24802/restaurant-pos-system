@@ -46,7 +46,7 @@ public class MenuItem {
     private String imageUrl;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "category_id")
+    @JoinColumn(name = "category_id", nullable = false)
     private MenuCategory category;
 
     private LocalDateTime createdAt;
