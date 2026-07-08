@@ -7,6 +7,9 @@ import com.prashant.restaurantpos.order.dto.AddOrderItemRequest;
 import com.prashant.restaurantpos.order.dto.CreateOrderRequest;
 import com.prashant.restaurantpos.order.dto.OrderResponse;
 import com.prashant.restaurantpos.order.service.OrderService;
+import java.util.List;
+
+import com.prashant.restaurantpos.order.entity.OrderStatus;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -32,5 +35,23 @@ public class OrderController {
             @Valid @RequestBody AddOrderItemRequest request) {
 
         return orderService.addItem(orderId, request);
+    }
+
+    @GetMapping
+    public List<OrderResponse> getAllOrders() {
+        return orderService.getAllOrders();
+    }
+
+    @GetMapping("/{id}")
+    public OrderResponse getOrderById(@PathVariable Long id) {
+        return orderService.getOrderById(id);
+    }
+
+    @PatchMapping("/{orderId}/status")
+    public OrderResponse updateStatus(
+            @PathVariable Long orderId,
+            @RequestParam OrderStatus status) {
+
+        return orderService.updateStatus(orderId, status);
     }
 }

@@ -1,6 +1,7 @@
 package com.prashant.restaurantpos.order.dto;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 import com.prashant.restaurantpos.order.entity.OrderStatus;
 
@@ -18,4 +19,6 @@ public class OrderResponse {
     private OrderStatus status;
 
     private BigDecimal totalAmount;
+
+    private List<OrderItemResponse> items;
 }

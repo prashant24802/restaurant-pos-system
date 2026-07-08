@@ -4,10 +4,15 @@ import java.math.BigDecimal;
 
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
+import com.prashant.restaurantpos.order.entity.OrderStatus;
+import com.prashant.restaurantpos.exception.ResourceNotFoundException;
 import com.prashant.restaurantpos.menu.entity.MenuItem;
 import com.prashant.restaurantpos.menu.repository.MenuItemRepository;
 import com.prashant.restaurantpos.order.dto.AddOrderItemRequest;
 import com.prashant.restaurantpos.order.dto.CreateOrderRequest;
+import com.prashant.restaurantpos.order.dto.OrderItemResponse;
 import com.prashant.restaurantpos.order.dto.OrderResponse;
 import com.prashant.restaurantpos.order.entity.Order;
 import com.prashant.restaurantpos.order.entity.OrderItem;
@@ -74,14 +79,60 @@ public class OrderServiceImpl implements OrderService {
 
         return mapToResponse(order);
     }
+    @Override
+    public List<OrderResponse> getAllOrders() {
+
+        return orderRepository.findAll()
+              .stream()
+              .map(this::mapToResponse)
+              .toList();
+    }
+
+    @Override
+    public OrderResponse getOrderById(Long id) {
+        Order order = orderRepository.findById(id)
+            .orElseThrow(() -> new ResourceNotFoundException("Order not found"));
+
+        return mapToResponse(order);
+    }
+    @Override
+    public OrderResponse updateStatus(Long orderId, OrderStatus status) {
+                Order order = orderRepository.findById(orderId)
+                        .orElseThrow(() -> new ResourceNotFoundException("Order not found"));
+
+        order.setStatus(status);
+
+        if (status == OrderStatus.PAID) {
+                RestaurantTable table = order.getTable();
+
+                table.setStatus(TableStatus.AVAILABLE);
+
+                tableRepository.save(table);
+        }
+
+        orderRepository.save(order);
+
+        return mapToResponse(order);
+    }
 
     private OrderResponse mapToResponse(Order order) {
+         List<OrderItemResponse> items = orderItemRepository.findByOrderId(order.getId())
+                .stream()
+                .map(item -> OrderItemResponse.builder()
+                        .id(item.getId())
+                        .menuItemName(item.getMenuItem().getName())
+                        .quantity(item.getQuantity())
+                        .price(item.getPrice())
+                        .subtotal(item.getSubtotal())
+                        .build())
+                .toList();
 
         return OrderResponse.builder()
                 .id(order.getId())
                 .tableNumber(order.getTable().getTableNumber())
                 .status(order.getStatus())
                 .totalAmount(order.getTotalAmount())
+                .items(items)
                 .build();
     }
 }

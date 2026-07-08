@@ -1,0 +1,21 @@
+package com.prashant.restaurantpos.order.dto;
+
+import java.math.BigDecimal;
+
+import lombok.Builder;
+import lombok.Data;
+
+@Data
+@Builder
+public class OrderItemResponse {
+
+    private Long id;
+
+    private String menuItemName;
+
+    private Integer quantity;
+
+    private BigDecimal price;
+
+    private BigDecimal subtotal;
+}
