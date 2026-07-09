@@ -1,6 +1,7 @@
 import { Component, inject } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Auth } from '../../../core/services/auth';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-login',
@@ -13,6 +14,7 @@ export class Login {
 
   private fb = inject(FormBuilder);
   private auth = inject(Auth);
+  private router = inject(Router);
 
   loginForm = this.fb.group({
     email: ['', [Validators.required, Validators.email]],
@@ -32,7 +34,7 @@ export class Login {
 
           localStorage.setItem("token", response.token);
 
-          alert("Login Successful");
+          this.router.navigate(['/dashboard']);
 
           console.log(response);
 
