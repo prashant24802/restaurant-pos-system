@@ -10,11 +10,13 @@ import com.prashant.restaurantpos.menu.entity.MenuCategory;
 import com.prashant.restaurantpos.menu.entity.MenuItem;
 import com.prashant.restaurantpos.menu.repository.MenuCategoryRepository;
 import com.prashant.restaurantpos.menu.repository.MenuItemRepository;
+import org.springframework.transaction.annotation.Transactional;
 
 import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor
+@Transactional
 public class MenuItemServiceImpl implements MenuItemService {
 
     private final MenuItemRepository menuItemRepository;
@@ -75,6 +77,16 @@ public class MenuItemServiceImpl implements MenuItemService {
         menuItemRepository.save(item);
 
         return mapToResponse(item);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<MenuItemResponse> search(String keyword) {
+
+        return menuItemRepository.findByNameContainingIgnoreCase(keyword)
+                .stream()
+                .map(this::mapToResponse)
+                .toList();
     }
 
     @Override

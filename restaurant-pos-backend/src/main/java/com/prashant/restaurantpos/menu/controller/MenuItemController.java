@@ -35,6 +35,11 @@ public class MenuItemController {
         return menuItemService.getById(id);
     }
 
+    @GetMapping("/search")
+    public List<MenuItemResponse> search(@RequestParam String keyword) {
+        return menuItemService.search(keyword);
+    }
+
     @PutMapping("/{id}")
     public MenuItemResponse update(
             @PathVariable Long id,

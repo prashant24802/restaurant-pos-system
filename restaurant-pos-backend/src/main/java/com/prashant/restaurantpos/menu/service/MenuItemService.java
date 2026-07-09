@@ -13,6 +13,8 @@ public interface MenuItemService {
 
     MenuItemResponse getById(Long id);
 
+    List<MenuItemResponse> search(String keyword);
+
     MenuItemResponse update(Long id, MenuItemRequest request);
 
     void delete(Long id);

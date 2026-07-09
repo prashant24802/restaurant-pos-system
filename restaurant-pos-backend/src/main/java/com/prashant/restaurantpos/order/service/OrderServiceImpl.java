@@ -1,12 +1,10 @@
 package com.prashant.restaurantpos.order.service;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-
-import com.prashant.restaurantpos.order.entity.OrderStatus;
 import com.prashant.restaurantpos.exception.ResourceNotFoundException;
 import com.prashant.restaurantpos.menu.entity.MenuItem;
 import com.prashant.restaurantpos.menu.repository.MenuItemRepository;
@@ -16,6 +14,7 @@ import com.prashant.restaurantpos.order.dto.OrderItemResponse;
 import com.prashant.restaurantpos.order.dto.OrderResponse;
 import com.prashant.restaurantpos.order.entity.Order;
 import com.prashant.restaurantpos.order.entity.OrderItem;
+import com.prashant.restaurantpos.order.entity.OrderStatus;
 import com.prashant.restaurantpos.order.repository.OrderItemRepository;
 import com.prashant.restaurantpos.order.repository.OrderRepository;
 import com.prashant.restaurantpos.table.entity.RestaurantTable;
@@ -50,6 +49,26 @@ public class OrderServiceImpl implements OrderService {
 
         return mapToResponse(order);
     }
+
+    @Override
+    public OrderResponse removeItem(Long orderId, Long orderItemId) {
+        Order order = orderRepository.findById(orderId)
+            .orElseThrow(() -> new RuntimeException("Order not found"));
+        OrderItem orderItem = orderItemRepository.findById(orderItemId)
+            .orElseThrow(() -> new RuntimeException("Order item not found"));
+        if (!orderItem.getOrder().getId().equals(orderId)) {
+                throw new RuntimeException("Order item does not belong to this order");
+        }
+
+        order.setTotalAmount(
+                order.getTotalAmount().subtract(orderItem.getSubtotal()));
+
+        orderItemRepository.delete(orderItem);
+
+        orderRepository.save(order);
+
+        return mapToResponse(order);
+}
 
     @Override
     public OrderResponse addItem(Long orderId, AddOrderItemRequest request) {
@@ -114,6 +133,22 @@ public class OrderServiceImpl implements OrderService {
 
         return mapToResponse(order);
     }
+
+    @Override
+        public OrderResponse cancelOrder(Long orderId) {
+                Order order = orderRepository.findById(orderId)
+                        .orElseThrow(() -> new RuntimeException("Order not found"));
+        
+                order.setStatus(OrderStatus.CANCELLED);
+        
+                RestaurantTable table = order.getTable();
+                table.setStatus(TableStatus.AVAILABLE);
+                tableRepository.save(table);
+        
+                orderRepository.save(order);
+        
+                return mapToResponse(order);
+        }
 
     private OrderResponse mapToResponse(Order order) {
          List<OrderItemResponse> items = orderItemRepository.findByOrderId(order.getId())
