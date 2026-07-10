@@ -6,7 +6,7 @@
   },
   "newProjectRoot": "projects",
   "projects": {
-    "restaurant-pos": {
+    "restaurant-pos-frontend": {
       "projectType": "application",
       "schematics": {},
       "root": "",
@@ -24,15 +24,7 @@
                 "input": "public"
               }
             ],
-            "styles": ["src/material-theme.scss", "src/styles.css"],
-            "server": "src/main.server.ts",
-            "outputMode": "server",
-            "security": {
-              "allowedHosts": []
-            },
-            "ssr": {
-              "entry": "src/server.ts"
-            }
+            "styles": ["src/material-theme.scss", "src/styles.css"]
           },
           "configurations": {
             "production": {
@@ -62,10 +54,10 @@
           "builder": "@angular/build:dev-server",
           "configurations": {
             "production": {
-              "buildTarget": "restaurant-pos:build:production"
+              "buildTarget": "restaurant-pos-frontend:build:production"
             },
             "development": {
-              "buildTarget": "restaurant-pos:build:development"
+              "buildTarget": "restaurant-pos-frontend:build:development"
             }
           },
           "defaultConfiguration": "development"

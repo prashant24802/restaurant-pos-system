@@ -1,9 +1,22 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-topbar',
-  imports: [],
+  standalone: true,
   templateUrl: './topbar.html',
-  styleUrl: './topbar.css',
+  styleUrl: './topbar.css'
 })
-export class Topbar {}
+export class Topbar {
+
+  private router = inject(Router);
+
+  logout() {
+
+    localStorage.removeItem('token');
+
+    this.router.navigate(['/']);
+
+  }
+
+}

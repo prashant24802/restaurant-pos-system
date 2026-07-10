@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Auth } from '../../../core/services/auth';
 import { Router } from '@angular/router';
@@ -20,6 +20,12 @@ export class Login {
     email: ['', [Validators.required, Validators.email]],
     password: ['', Validators.required]
   });
+
+  ngOnInit(): void {
+    if (localStorage.getItem('token')) {
+      this.router.navigate(['/dashboard']);
+    }
+  } 
 
   login() {
 
