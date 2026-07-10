@@ -4,6 +4,7 @@ import { Login } from './features/auth/login/login';
 import { MainLayout } from './layout/main-layout/main-layout';
 import { Dashboard } from './features/dashboard/dashboard/dashboard';
 import { authGuard } from './core/guards/auth-guard';
+import { MenuList } from './features/menu/menu-list/menu-list';
 
 export const routes: Routes = [
 
@@ -20,6 +21,10 @@ export const routes: Routes = [
       {
         path: '',
         component: Dashboard
+      },
+      {
+        path: 'menu',
+        component: MenuList
       }
     ]
   }

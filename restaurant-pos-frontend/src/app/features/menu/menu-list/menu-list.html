@@ -1,0 +1,23 @@
+<h2>Menu Items</h2>
+
+<table border="1" cellpadding="10">
+
+    <tr>
+
+        <th>ID</th>
+        <th>Name</th>
+        <th>Category</th>
+        <th>Price</th>
+
+    </tr>
+
+    <tr *ngFor="let item of menuItems">
+
+        <td>{{ item.id }}</td>
+        <td>{{ item.name }}</td>
+        <td>{{ item.categoryName }}</td>
+        <td>{{ item.price }}</td>
+
+    </tr>
+
+</table>
