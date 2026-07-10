@@ -73,12 +73,17 @@ export class MenuList implements OnInit {
   }
 
   openAddDialog(): void {
+    const dialogRef = this.dialog.open(AddMenuDialog, {
 
-    this.dialog.open(AddMenuDialog, {
-      width: '500px'
-
+    width: '500px'
     });
 
+  dialogRef.afterClosed().subscribe(result => {
+    if (result) {
+      this.loadMenu();
+    }
+
+   });
   }
 
 }
