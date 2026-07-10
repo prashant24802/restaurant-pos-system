@@ -7,6 +7,8 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatDialog, MatDialogModule } from '@angular/material/dialog';
+import { AddMenuDialog } from '../add-menu-dialog/add-menu-dialog';
 
 import { Menu } from '../services/menu';
 import { MenuItem } from '../models/menu-item';
@@ -21,7 +23,8 @@ import { MenuItem } from '../models/menu-item';
     MatButtonModule,
     MatIconModule,
     MatInputModule,
-    MatFormFieldModule
+    MatFormFieldModule,
+    MatDialogModule
   ],
   templateUrl: './menu-list.html',
   styleUrl: './menu-list.css'
@@ -29,6 +32,7 @@ import { MenuItem } from '../models/menu-item';
 export class MenuList implements OnInit {
 
   private menuService = inject(Menu);
+  private dialog = inject(MatDialog);
 
   menuItems: MenuItem[] = [];
 
@@ -63,6 +67,15 @@ export class MenuList implements OnInit {
         console.error(err);
 
       }
+
+    });
+
+  }
+
+  openAddDialog(): void {
+
+    this.dialog.open(AddMenuDialog, {
+      width: '500px'
 
     });
 
