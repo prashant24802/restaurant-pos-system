@@ -1,1 +1,50 @@
-<p>sidebar works!</p>
+<div class="sidebar">
+
+    <h2>Restaurant POS</h2>
+
+    <nav>
+
+        <a
+            routerLink="/dashboard"
+            routerLinkActive="active"
+            [routerLinkActiveOptions]="{ exact: true }">
+
+            Dashboard
+
+        </a>
+
+        <a
+            routerLink="/menu"
+            routerLinkActive="active">
+
+            Menu
+
+        </a>
+
+        <a
+            routerLink="/orders"
+            routerLinkActive="active">
+
+            Orders
+
+        </a>
+
+        <a
+            routerLink="/tables"
+            routerLinkActive="active">
+
+            Tables
+
+        </a>
+
+        <a
+            routerLink="/billing"
+            routerLinkActive="active">
+
+            Billing
+
+        </a>
+
+    </nav>
+
+</div>
