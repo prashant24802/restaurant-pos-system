@@ -8,7 +8,8 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
-import { AddMenuDialog } from '../add-menu-dialog/add-menu-dialog';
+import { MenuFormDialog } from '../menu-form-dialog/menu-form-dialog';
+
 
 import { Menu } from '../services/menu';
 import { MenuItem } from '../models/menu-item';
@@ -73,8 +74,7 @@ export class MenuList implements OnInit {
   }
 
   openAddDialog(): void {
-    const dialogRef = this.dialog.open(AddMenuDialog, {
-
+    const dialogRef = this.dialog.open(MenuFormDialog,{
     width: '500px'
     });
 
@@ -84,6 +84,23 @@ export class MenuList implements OnInit {
     }
 
    });
+  }
+
+  editItem(item: MenuItem): void {
+    const dialogRef = this.dialog.open(MenuFormDialog, {
+      width: '500px',
+      data: item
+
+    });
+
+     dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        this.loadMenu();
+
+      }
+
+    });
+
   }
 
 }
