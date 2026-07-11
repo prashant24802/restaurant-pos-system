@@ -22,6 +22,7 @@ import { ConfirmationDialog } from '../../../shared/confirmation-dialog/confirma
 
 import { Menu } from '../services/menu';
 import { MenuItem } from '../models/menu-item';
+import { MenuQuery } from '../models/menu-query';
 
 @Component({
   selector: 'app-menu-list',
@@ -44,9 +45,7 @@ import { MenuItem } from '../models/menu-item';
 export class MenuList implements OnInit {
 
   private menuService = inject(Menu);
-
   private dialog = inject(MatDialog);
-
   private snackBar = inject(MatSnackBar);
 
   menuItems: MenuItem[] = [];
@@ -59,35 +58,27 @@ export class MenuList implements OnInit {
     'actions'
   ];
 
-  search = '';
-
-  pageIndex = 0;
-
-  pageSize = 5;
+  query: MenuQuery = {
+    page: 0,
+    size: 5,
+    search: '',
+    sort: 'name',
+    direction: 'asc'
+  };
 
   totalElements = 0;
 
+  loading = false;
+
   ngOnInit(): void {
-
-    this.loadMenu();
-
+    this.loadData();
   }
 
-  loadMenu(): void {
+  loadData(): void {
 
-    this.menuService.getPage({
+    this.loading = true;
 
-      page: this.pageIndex,
-
-      size: this.pageSize,
-
-      search: '',
-
-      sort: 'name',
-
-      direction: 'asc'
-
-    }).subscribe({
+    this.menuService.getPage(this.query).subscribe({
 
       next: (page) => {
 
@@ -95,24 +86,22 @@ export class MenuList implements OnInit {
 
         this.totalElements = page.totalElements;
 
+        this.loading = false;
+
       },
 
       error: (err) => {
 
         console.error(err);
 
+        this.loading = false;
+
         this.snackBar.open(
-
           'Failed to load menu',
-
           'Close',
-
           {
-
             duration: 3000
-
           }
-
         );
 
       }
@@ -121,29 +110,35 @@ export class MenuList implements OnInit {
 
   }
 
+  onSearch(): void {
+
+    this.query.page = 0;
+
+    this.loadData();
+
+  }
+
   onPageChange(event: PageEvent): void {
 
-    this.pageIndex = event.pageIndex;
+    this.query.page = event.pageIndex;
 
-    this.pageSize = event.pageSize;
+    this.query.size = event.pageSize;
 
-    this.loadMenu();
+    this.loadData();
 
   }
 
   openAddDialog(): void {
 
     const dialogRef = this.dialog.open(MenuFormDialog, {
-
       width: '500px'
-
     });
 
     dialogRef.afterClosed().subscribe(result => {
 
       if (result) {
 
-        this.loadMenu();
+        this.loadData();
 
       }
 
@@ -154,18 +149,15 @@ export class MenuList implements OnInit {
   editItem(item: MenuItem): void {
 
     const dialogRef = this.dialog.open(MenuFormDialog, {
-
       width: '500px',
-
       data: item
-
     });
 
     dialogRef.afterClosed().subscribe(result => {
 
       if (result) {
 
-        this.loadMenu();
+        this.loadData();
 
       }
 
@@ -202,20 +194,14 @@ export class MenuList implements OnInit {
         next: () => {
 
           this.snackBar.open(
-
             'Menu item deleted successfully',
-
             'Close',
-
             {
-
               duration: 3000
-
             }
-
           );
 
-          this.loadMenu();
+          this.loadData();
 
         },
 
@@ -224,17 +210,11 @@ export class MenuList implements OnInit {
           console.error(err);
 
           this.snackBar.open(
-
             'Failed to delete menu item',
-
             'Close',
-
             {
-
               duration: 3000
-
             }
-
           );
 
         }

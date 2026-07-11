@@ -6,20 +6,8 @@ export interface MenuQuery {
 
   search: string;
 
-  sort: keyof MenuSortFields;
+  sort: string;
 
   direction: 'asc' | 'desc';
-
-}
-
-export interface MenuSortFields {
-
-  id: number;
-
-  name: string;
-
-  categoryName: string;
-
-  price: number;
 
 }

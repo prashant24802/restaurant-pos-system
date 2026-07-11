@@ -21,7 +21,8 @@
 
     <input
       matInput
-      [(ngModel)]="search"
+      [(ngModel)]="query.search"
+      (ngModelChange)="onSearch()"
       placeholder="Search by name, category or description...">
 
   </mat-form-field>
@@ -123,9 +124,9 @@
 
   <mat-paginator
     [length]="totalElements"
-    [pageSize]="pageSize"
-    [pageIndex]="pageIndex"
-    [pageSizeOptions]="[5,10,20]"
+    [pageSize]="query.size"
+    [pageIndex]="query.page"
+    [pageSizeOptions]="[5, 10, 20]"
     (page)="onPageChange($event)">
   </mat-paginator>
 

@@ -20,21 +20,19 @@ export class Menu {
 
   private apiUrl = 'http://localhost:8080/api/menu/items';
 
-  getAll(): Observable<MenuItem[]> {
-
-    return this.http.get<MenuItem[]>(this.apiUrl);
-
-  }
-
   getPage(query: MenuQuery): Observable<PageResponse<MenuItem>> {
 
-    const params = new HttpParams()
+    let params = new HttpParams()
       .set('page', query.page)
       .set('size', query.size)
       .set('sort', `${query.sort},${query.direction}`);
 
+    if (query.search.trim()) {
+      params = params.set('search', query.search);
+    }
+
     return this.http.get<PageResponse<MenuItem>>(
-      `${this.apiUrl}/page`,
+      this.apiUrl,
       { params }
     );
 
@@ -73,18 +71,6 @@ export class Menu {
 
     return this.http.delete<void>(
       `${this.apiUrl}/${id}`
-    );
-
-  }
-
-  search(keyword: string): Observable<MenuItem[]> {
-
-    const params = new HttpParams()
-      .set('keyword', keyword);
-
-    return this.http.get<MenuItem[]>(
-      `${this.apiUrl}/search`,
-      { params }
     );
 
   }
