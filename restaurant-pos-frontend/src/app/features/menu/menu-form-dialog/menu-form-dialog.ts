@@ -16,6 +16,10 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
+import {
+  MatSnackBar,
+  MatSnackBarModule
+} from '@angular/material/snack-bar';
 
 import { Category } from '../models/category';
 import { CategoryService } from '../services/category';
@@ -33,7 +37,8 @@ import { MenuItemRequest } from '../models/menu-item-request';
     MatButtonModule,
     MatFormFieldModule,
     MatInputModule,
-    MatSelectModule
+    MatSelectModule,
+    MatSnackBarModule
   ],
   templateUrl: './menu-form-dialog.html',
   styleUrl: './menu-form-dialog.css'
@@ -48,9 +53,12 @@ export class MenuFormDialog implements OnInit {
 
   private dialogRef = inject(MatDialogRef<MenuFormDialog>);
 
-  private data = inject<MenuItem | null>(MAT_DIALOG_DATA, {
-    optional: true
-  });
+  private snackBar = inject(MatSnackBar);
+
+  private data = inject<MenuItem | null>(
+    MAT_DIALOG_DATA,
+    { optional: true }
+  );
 
   categories: Category[] = [];
 
@@ -129,28 +137,28 @@ export class MenuFormDialog implements OnInit {
     const request = this.form.value as MenuItemRequest;
 
     if (this.isEdit && this.data) {
-      this.menuService.create(request).subscribe({
 
-      next: () => {
+      this.menuService.update(this.data.id, request).subscribe({
 
-        this.dialogRef.close(true);
-
-      },
-
-      error: (err) => {
-
-        console.error(err);
-
-        alert('Failed to create menu item');
-
-      }
-
-    });
-
-  }else {
-
-      this.menuService.update(this.data!.id, request).subscribe({
         next: () => {
+
+          this.snackBar.open(
+
+            '✅ Menu item updated successfully',
+
+            'Close',
+
+            {
+
+              duration: 3000,
+
+              horizontalPosition: 'right',
+
+              verticalPosition: 'top'
+
+            }
+
+          );
 
           this.dialogRef.close(true);
 
@@ -160,7 +168,69 @@ export class MenuFormDialog implements OnInit {
 
           console.error(err);
 
-          alert('Failed to create menu item');
+          this.snackBar.open(
+
+            '❌ Failed to update menu item',
+
+            'Close',
+
+            {
+
+              duration: 3000
+
+            }
+
+          );
+
+        }
+
+      });
+
+    } else {
+
+      this.menuService.create(request).subscribe({
+
+        next: () => {
+
+          this.snackBar.open(
+
+            '✅ Menu item created successfully',
+
+            'Close',
+
+            {
+
+              duration: 3000,
+
+              horizontalPosition: 'right',
+
+              verticalPosition: 'top'
+
+            }
+
+          );
+
+          this.dialogRef.close(true);
+
+        },
+
+        error: (err) => {
+
+          console.error(err);
+
+          this.snackBar.open(
+
+            '❌ Failed to create menu item',
+
+            'Close',
+
+            {
+
+              duration: 3000
+
+            }
+
+          );
 
         }
 

@@ -8,6 +8,10 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
+import {
+  MatSnackBar,
+  MatSnackBarModule
+} from '@angular/material/snack-bar';
 
 import { MenuFormDialog } from '../menu-form-dialog/menu-form-dialog';
 import { ConfirmationDialog } from '../../../shared/confirmation-dialog/confirmation-dialog';
@@ -26,7 +30,8 @@ import { MenuItem } from '../models/menu-item';
     MatIconModule,
     MatInputModule,
     MatFormFieldModule,
-    MatDialogModule
+    MatDialogModule,
+    MatSnackBarModule
   ],
   templateUrl: './menu-list.html',
   styleUrl: './menu-list.css'
@@ -36,6 +41,8 @@ export class MenuList implements OnInit {
   private menuService = inject(Menu);
 
   private dialog = inject(MatDialog);
+
+  private snackBar = inject(MatSnackBar);
 
   menuItems: MenuItem[] = [];
 
@@ -63,13 +70,29 @@ export class MenuList implements OnInit {
 
         this.menuItems = data;
 
-        console.log(data);
-
       },
 
       error: (err) => {
 
         console.error(err);
+
+        this.snackBar.open(
+
+          '❌ Failed to load menu items',
+
+          'Close',
+
+          {
+
+            duration: 3000,
+
+            horizontalPosition: 'right',
+
+            verticalPosition: 'top'
+
+          }
+
+        );
 
       }
 
@@ -147,6 +170,24 @@ export class MenuList implements OnInit {
 
         next: () => {
 
+          this.snackBar.open(
+
+            '✅ Menu item deleted successfully',
+
+            'Close',
+
+            {
+
+              duration: 3000,
+
+              horizontalPosition: 'right',
+
+              verticalPosition: 'top'
+
+            }
+
+          );
+
           this.loadMenu();
 
         },
@@ -155,7 +196,23 @@ export class MenuList implements OnInit {
 
           console.error(err);
 
-          alert('Failed to delete menu item');
+          this.snackBar.open(
+
+            '❌ Failed to delete menu item',
+
+            'Close',
+
+            {
+
+              duration: 3000,
+
+              horizontalPosition: 'right',
+
+              verticalPosition: 'top'
+
+            }
+
+          );
 
         }
 
