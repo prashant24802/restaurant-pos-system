@@ -16,6 +16,17 @@ import {
   MatPaginatorModule,
   PageEvent
 } from '@angular/material/paginator';
+import {
+  MatSortModule,
+  Sort
+} from '@angular/material/sort';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+
+import {
+  Subject,
+  debounceTime,
+  distinctUntilChanged
+} from 'rxjs';
 
 import { MenuFormDialog } from '../menu-form-dialog/menu-form-dialog';
 import { ConfirmationDialog } from '../../../shared/confirmation-dialog/confirmation-dialog';
@@ -37,7 +48,9 @@ import { MenuQuery } from '../models/menu-query';
     MatFormFieldModule,
     MatDialogModule,
     MatSnackBarModule,
-    MatPaginatorModule
+    MatPaginatorModule,
+    MatSortModule,
+    MatProgressSpinnerModule
   ],
   templateUrl: './menu-list.html',
   styleUrl: './menu-list.css'
@@ -47,6 +60,8 @@ export class MenuList implements OnInit {
   private menuService = inject(Menu);
   private dialog = inject(MatDialog);
   private snackBar = inject(MatSnackBar);
+
+  private searchSubject = new Subject<string>();
 
   menuItems: MenuItem[] = [];
 
@@ -71,7 +86,22 @@ export class MenuList implements OnInit {
   loading = false;
 
   ngOnInit(): void {
+
     this.loadData();
+
+    this.searchSubject
+      .pipe(
+        debounceTime(300),
+        distinctUntilChanged()
+      )
+      .subscribe(() => {
+
+        this.query.page = 0;
+
+        this.loadData();
+
+      });
+
   }
 
   loadData(): void {
@@ -112,9 +142,7 @@ export class MenuList implements OnInit {
 
   onSearch(): void {
 
-    this.query.page = 0;
-
-    this.loadData();
+    this.searchSubject.next(this.query.search);
 
   }
 
@@ -123,6 +151,25 @@ export class MenuList implements OnInit {
     this.query.page = event.pageIndex;
 
     this.query.size = event.pageSize;
+
+    this.loadData();
+
+  }
+
+  sortData(sort: Sort): void {
+
+    if (!sort.active) {
+
+      return;
+
+    }
+
+    this.query.sort = sort.active;
+
+    this.query.direction =
+      (sort.direction || 'asc') as 'asc' | 'desc';
+
+    this.query.page = 0;
 
     this.loadData();
 
