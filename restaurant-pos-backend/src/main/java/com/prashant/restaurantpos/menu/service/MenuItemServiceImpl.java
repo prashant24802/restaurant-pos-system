@@ -1,7 +1,5 @@
 package com.prashant.restaurantpos.menu.service;
 
-import java.util.List;
-
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -45,19 +43,12 @@ public class MenuItemServiceImpl implements MenuItemService {
 
     @Override
     @Transactional(readOnly = true)
-    public List<MenuItemResponse> getAll() {
+    public Page<MenuItemResponse> getPage(
+            String search,
+            Pageable pageable) {
 
-        return menuItemRepository.findAll()
-                .stream()
-                .map(this::mapToResponse)
-                .toList();
-    }
-
-    @Override
-    @Transactional(readOnly = true)
-    public Page<MenuItemResponse> getPage(Pageable pageable) {
-
-        return menuItemRepository.findAll(pageable)
+        return menuItemRepository
+                .search(search, pageable)
                 .map(this::mapToResponse);
 
     }
@@ -70,20 +61,13 @@ public class MenuItemServiceImpl implements MenuItemService {
                 .orElseThrow(() -> new RuntimeException("Menu Item not found"));
 
         return mapToResponse(item);
+
     }
 
     @Override
-    @Transactional(readOnly = true)
-    public List<MenuItemResponse> search(String keyword) {
-
-        return menuItemRepository.search(keyword)
-                .stream()
-                .map(this::mapToResponse)
-                .toList();
-    }
-
-    @Override
-    public MenuItemResponse update(Long id, MenuItemRequest request) {
+    public MenuItemResponse update(
+            Long id,
+            MenuItemRequest request) {
 
         MenuItem item = menuItemRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Menu Item not found"));
@@ -97,9 +81,10 @@ public class MenuItemServiceImpl implements MenuItemService {
         item.setImageUrl(request.getImageUrl());
         item.setCategory(category);
 
-        menuItemRepository.save(item);
+        item = menuItemRepository.save(item);
 
         return mapToResponse(item);
+
     }
 
     @Override
