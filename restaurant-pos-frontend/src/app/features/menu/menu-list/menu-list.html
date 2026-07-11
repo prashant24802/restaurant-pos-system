@@ -82,9 +82,13 @@
     <mat-icon>edit</mat-icon>
     </button>
 
-        <button mat-icon-button color="warn">
-          <mat-icon>delete</mat-icon>
-        </button>
+    <button
+     mat-icon-button
+     color="warn"
+     (click)="deleteItem(item)">
+     <mat-icon>delete</mat-icon>
+
+    </button>
 
       </td>
 

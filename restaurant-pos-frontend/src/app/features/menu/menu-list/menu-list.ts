@@ -8,8 +8,9 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
-import { MenuFormDialog } from '../menu-form-dialog/menu-form-dialog';
 
+import { MenuFormDialog } from '../menu-form-dialog/menu-form-dialog';
+import { ConfirmationDialog } from '../../../shared/confirmation-dialog/confirmation-dialog';
 
 import { Menu } from '../services/menu';
 import { MenuItem } from '../models/menu-item';
@@ -33,6 +34,7 @@ import { MenuItem } from '../models/menu-item';
 export class MenuList implements OnInit {
 
   private menuService = inject(Menu);
+
   private dialog = inject(MatDialog);
 
   menuItems: MenuItem[] = [];
@@ -48,7 +50,9 @@ export class MenuList implements OnInit {
   search = '';
 
   ngOnInit(): void {
+
     this.loadMenu();
+
   }
 
   loadMenu(): void {
@@ -74,30 +78,88 @@ export class MenuList implements OnInit {
   }
 
   openAddDialog(): void {
-    const dialogRef = this.dialog.open(MenuFormDialog,{
-    width: '500px'
+
+    const dialogRef = this.dialog.open(MenuFormDialog, {
+
+      width: '500px'
+
     });
 
-  dialogRef.afterClosed().subscribe(result => {
-    if (result) {
-      this.loadMenu();
-    }
+    dialogRef.afterClosed().subscribe(result => {
 
-   });
+      if (result) {
+
+        this.loadMenu();
+
+      }
+
+    });
+
   }
 
   editItem(item: MenuItem): void {
+
     const dialogRef = this.dialog.open(MenuFormDialog, {
+
       width: '500px',
+
       data: item
 
     });
 
-     dialogRef.afterClosed().subscribe(result => {
+    dialogRef.afterClosed().subscribe(result => {
+
       if (result) {
+
         this.loadMenu();
 
       }
+
+    });
+
+  }
+
+  deleteItem(item: MenuItem): void {
+
+    const dialogRef = this.dialog.open(ConfirmationDialog, {
+
+      width: '400px',
+
+      data: {
+
+        title: 'Delete Menu Item',
+
+        message: `Are you sure you want to delete "${item.name}"?`
+
+      }
+
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+
+      if (!result) {
+
+        return;
+
+      }
+
+      this.menuService.delete(item.id).subscribe({
+
+        next: () => {
+
+          this.loadMenu();
+
+        },
+
+        error: (err) => {
+
+          console.error(err);
+
+          alert('Failed to delete menu item');
+
+        }
+
+      });
 
     });
 
