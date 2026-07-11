@@ -9,6 +9,7 @@ import { Observable } from 'rxjs';
 import { MenuItem } from '../models/menu-item';
 import { MenuItemRequest } from '../models/menu-item-request';
 import { PageResponse } from '../models/page-response';
+import { MenuQuery } from '../models/menu-query';
 
 @Injectable({
   providedIn: 'root'
@@ -25,14 +26,12 @@ export class Menu {
 
   }
 
-  getPage(
-    page: number,
-    size: number
-  ): Observable<PageResponse<MenuItem>> {
+  getPage(query: MenuQuery): Observable<PageResponse<MenuItem>> {
 
     const params = new HttpParams()
-      .set('page', page)
-      .set('size', size);
+      .set('page', query.page)
+      .set('size', query.size)
+      .set('sort', `${query.sort},${query.direction}`);
 
     return this.http.get<PageResponse<MenuItem>>(
       `${this.apiUrl}/page`,
@@ -43,13 +42,18 @@ export class Menu {
 
   getById(id: number): Observable<MenuItem> {
 
-    return this.http.get<MenuItem>(`${this.apiUrl}/${id}`);
+    return this.http.get<MenuItem>(
+      `${this.apiUrl}/${id}`
+    );
 
   }
 
   create(request: MenuItemRequest): Observable<MenuItem> {
 
-    return this.http.post<MenuItem>(this.apiUrl, request);
+    return this.http.post<MenuItem>(
+      this.apiUrl,
+      request
+    );
 
   }
 

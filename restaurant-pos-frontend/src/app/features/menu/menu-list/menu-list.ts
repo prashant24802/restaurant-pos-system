@@ -75,10 +75,19 @@ export class MenuList implements OnInit {
 
   loadMenu(): void {
 
-    this.menuService.getPage(
-      this.pageIndex,
-      this.pageSize
-    ).subscribe({
+    this.menuService.getPage({
+
+      page: this.pageIndex,
+
+      size: this.pageSize,
+
+      search: '',
+
+      sort: 'name',
+
+      direction: 'asc'
+
+    }).subscribe({
 
       next: (page) => {
 
@@ -93,11 +102,17 @@ export class MenuList implements OnInit {
         console.error(err);
 
         this.snackBar.open(
+
           'Failed to load menu',
+
           'Close',
+
           {
+
             duration: 3000
+
           }
+
         );
 
       }
