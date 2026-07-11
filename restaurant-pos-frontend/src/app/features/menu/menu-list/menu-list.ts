@@ -12,6 +12,10 @@ import {
   MatSnackBar,
   MatSnackBarModule
 } from '@angular/material/snack-bar';
+import {
+  MatPaginatorModule,
+  PageEvent
+} from '@angular/material/paginator';
 
 import { MenuFormDialog } from '../menu-form-dialog/menu-form-dialog';
 import { ConfirmationDialog } from '../../../shared/confirmation-dialog/confirmation-dialog';
@@ -31,7 +35,8 @@ import { MenuItem } from '../models/menu-item';
     MatInputModule,
     MatFormFieldModule,
     MatDialogModule,
-    MatSnackBarModule
+    MatSnackBarModule,
+    MatPaginatorModule
   ],
   templateUrl: './menu-list.html',
   styleUrl: './menu-list.css'
@@ -46,7 +51,7 @@ export class MenuList implements OnInit {
 
   menuItems: MenuItem[] = [];
 
-  displayedColumns: string[] = [
+  displayedColumns = [
     'id',
     'name',
     'category',
@@ -56,6 +61,12 @@ export class MenuList implements OnInit {
 
   search = '';
 
+  pageIndex = 0;
+
+  pageSize = 5;
+
+  totalElements = 0;
+
   ngOnInit(): void {
 
     this.loadMenu();
@@ -64,11 +75,16 @@ export class MenuList implements OnInit {
 
   loadMenu(): void {
 
-    this.menuService.getAll().subscribe({
+    this.menuService.getPage(
+      this.pageIndex,
+      this.pageSize
+    ).subscribe({
 
-      next: (data) => {
+      next: (page) => {
 
-        this.menuItems = data;
+        this.menuItems = page.content;
+
+        this.totalElements = page.totalElements;
 
       },
 
@@ -77,26 +93,26 @@ export class MenuList implements OnInit {
         console.error(err);
 
         this.snackBar.open(
-
-          '❌ Failed to load menu items',
-
+          'Failed to load menu',
           'Close',
-
           {
-
-            duration: 3000,
-
-            horizontalPosition: 'right',
-
-            verticalPosition: 'top'
-
+            duration: 3000
           }
-
         );
 
       }
 
     });
+
+  }
+
+  onPageChange(event: PageEvent): void {
+
+    this.pageIndex = event.pageIndex;
+
+    this.pageSize = event.pageSize;
+
+    this.loadMenu();
 
   }
 
@@ -172,17 +188,13 @@ export class MenuList implements OnInit {
 
           this.snackBar.open(
 
-            '✅ Menu item deleted successfully',
+            'Menu item deleted successfully',
 
             'Close',
 
             {
 
-              duration: 3000,
-
-              horizontalPosition: 'right',
-
-              verticalPosition: 'top'
+              duration: 3000
 
             }
 
@@ -198,17 +210,13 @@ export class MenuList implements OnInit {
 
           this.snackBar.open(
 
-            '❌ Failed to delete menu item',
+            'Failed to delete menu item',
 
             'Close',
 
             {
 
-              duration: 3000,
-
-              horizontalPosition: 'right',
-
-              verticalPosition: 'top'
+              duration: 3000
 
             }
 
