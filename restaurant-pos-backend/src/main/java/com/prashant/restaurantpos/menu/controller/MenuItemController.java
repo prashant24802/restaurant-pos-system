@@ -12,6 +12,9 @@ import com.prashant.restaurantpos.menu.service.MenuItemService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+
 @RestController
 @RequestMapping("/api/menu/items")
 @RequiredArgsConstructor
@@ -28,6 +31,11 @@ public class MenuItemController {
     @GetMapping
     public List<MenuItemResponse> getAll() {
         return menuItemService.getAll();
+    }
+
+    @GetMapping("/page")
+    public Page<MenuItemResponse> getPage(Pageable pageable) {
+        return menuItemService.getPage(pageable);
     }
 
     @GetMapping("/{id}")

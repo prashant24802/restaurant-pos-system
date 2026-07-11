@@ -2,7 +2,10 @@ package com.prashant.restaurantpos.menu.service;
 
 import java.util.List;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.prashant.restaurantpos.menu.dto.MenuItemRequest;
 import com.prashant.restaurantpos.menu.dto.MenuItemResponse;
@@ -10,7 +13,6 @@ import com.prashant.restaurantpos.menu.entity.MenuCategory;
 import com.prashant.restaurantpos.menu.entity.MenuItem;
 import com.prashant.restaurantpos.menu.repository.MenuCategoryRepository;
 import com.prashant.restaurantpos.menu.repository.MenuItemRepository;
-import org.springframework.transaction.annotation.Transactional;
 
 import lombok.RequiredArgsConstructor;
 
@@ -42,6 +44,7 @@ public class MenuItemServiceImpl implements MenuItemService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public List<MenuItemResponse> getAll() {
 
         return menuItemRepository.findAll()
@@ -51,12 +54,32 @@ public class MenuItemServiceImpl implements MenuItemService {
     }
 
     @Override
+    @Transactional(readOnly = true)
+    public Page<MenuItemResponse> getPage(Pageable pageable) {
+
+        return menuItemRepository.findAll(pageable)
+                .map(this::mapToResponse);
+
+    }
+
+    @Override
+    @Transactional(readOnly = true)
     public MenuItemResponse getById(Long id) {
 
         MenuItem item = menuItemRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Menu Item not found"));
 
         return mapToResponse(item);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<MenuItemResponse> search(String keyword) {
+
+        return menuItemRepository.search(keyword)
+                .stream()
+                .map(this::mapToResponse)
+                .toList();
     }
 
     @Override
@@ -80,22 +103,13 @@ public class MenuItemServiceImpl implements MenuItemService {
     }
 
     @Override
-    @Transactional(readOnly = true)
-    public List<MenuItemResponse> search(String keyword) {
-
-        return menuItemRepository.findByNameContainingIgnoreCase(keyword)
-                .stream()
-                .map(this::mapToResponse)
-                .toList();
-    }
-
-    @Override
     public void delete(Long id) {
 
         MenuItem item = menuItemRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Menu Item not found"));
 
         menuItemRepository.delete(item);
+
     }
 
     private MenuItemResponse mapToResponse(MenuItem item) {
@@ -110,5 +124,7 @@ public class MenuItemServiceImpl implements MenuItemService {
                 .categoryId(item.getCategory().getId())
                 .categoryName(item.getCategory().getName())
                 .build();
+
     }
+
 }
