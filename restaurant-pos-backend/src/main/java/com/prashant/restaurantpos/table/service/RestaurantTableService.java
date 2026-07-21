@@ -1,19 +1,27 @@
 package com.prashant.restaurantpos.table.service;
 
-import java.util.List;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 import com.prashant.restaurantpos.table.dto.TableRequest;
 import com.prashant.restaurantpos.table.dto.TableResponse;
+import com.prashant.restaurantpos.table.entity.TableStatus;
 
 public interface RestaurantTableService {
 
     TableResponse create(TableRequest request);
 
-    List<TableResponse> getAll();
+    Page<TableResponse> getPage(
+            String search,
+            TableStatus status,
+            Pageable pageable);
 
     TableResponse getById(Long id);
 
-    TableResponse update(Long id, TableRequest request);
+    TableResponse update(
+            Long id,
+            TableRequest request);
 
     void delete(Long id);
+
 }

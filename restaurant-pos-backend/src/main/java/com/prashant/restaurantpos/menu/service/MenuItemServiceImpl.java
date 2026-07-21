@@ -11,6 +11,7 @@ import com.prashant.restaurantpos.menu.entity.MenuCategory;
 import com.prashant.restaurantpos.menu.entity.MenuItem;
 import com.prashant.restaurantpos.menu.repository.MenuCategoryRepository;
 import com.prashant.restaurantpos.menu.repository.MenuItemRepository;
+import com.prashant.restaurantpos.menu.specification.MenuItemSpecification;
 
 import lombok.RequiredArgsConstructor;
 
@@ -39,16 +40,23 @@ public class MenuItemServiceImpl implements MenuItemService {
         item = menuItemRepository.save(item);
 
         return mapToResponse(item);
+
     }
 
     @Override
     @Transactional(readOnly = true)
     public Page<MenuItemResponse> getPage(
             String search,
+            Long categoryId,
+            Boolean available,
             Pageable pageable) {
 
-        return menuItemRepository
-                .search(search, pageable)
+        return menuItemRepository.findAll(
+                MenuItemSpecification.filter(
+                        search,
+                        categoryId,
+                        available),
+                pageable)
                 .map(this::mapToResponse);
 
     }

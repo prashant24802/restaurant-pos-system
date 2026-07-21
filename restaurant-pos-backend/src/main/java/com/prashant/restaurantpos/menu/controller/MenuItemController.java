@@ -33,14 +33,23 @@ public class MenuItemController {
 
             @RequestParam(required = false) String search,
 
+            @RequestParam(required = false) Long categoryId,
+
+            @RequestParam(required = false) Boolean available,
+
             Pageable pageable) {
 
-        return menuItemService.getPage(search, pageable);
+        return menuItemService.getPage(
+                search,
+                categoryId,
+                available,
+                pageable);
 
     }
 
     @GetMapping("/{id}")
-    public MenuItemResponse getById(@PathVariable Long id) {
+    public MenuItemResponse getById(
+            @PathVariable Long id) {
 
         return menuItemService.getById(id);
 
@@ -59,7 +68,8 @@ public class MenuItemController {
 
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void delete(@PathVariable Long id) {
+    public void delete(
+            @PathVariable Long id) {
 
         menuItemService.delete(id);
 

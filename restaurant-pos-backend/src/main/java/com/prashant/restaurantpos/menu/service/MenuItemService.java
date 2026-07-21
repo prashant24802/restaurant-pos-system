@@ -12,11 +12,15 @@ public interface MenuItemService {
 
     Page<MenuItemResponse> getPage(
             String search,
+            Long categoryId,
+            Boolean available,
             Pageable pageable);
 
     MenuItemResponse getById(Long id);
 
-    MenuItemResponse update(Long id, MenuItemRequest request);
+    MenuItemResponse update(
+            Long id,
+            MenuItemRequest request);
 
     void delete(Long id);
 
