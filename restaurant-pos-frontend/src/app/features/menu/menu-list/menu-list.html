@@ -15,33 +15,117 @@
 
   </div>
 
-  <mat-form-field appearance="outline">
+  <!-- ========================= -->
+  <!-- Filters -->
+  <!-- ========================= -->
 
-    <mat-label>Search Menu</mat-label>
+  <div
+    style="display:flex;gap:16px;flex-wrap:wrap;align-items:center;margin-bottom:20px;">
 
-    <input
-      matInput
-      [(ngModel)]="query.search"
-      (ngModelChange)="onSearch()"
-      placeholder="Search by name, category or description...">
+    <!-- Search -->
 
-  </mat-form-field>
+    <mat-form-field appearance="outline">
 
-  <!-- Loading Spinner -->
+      <mat-label>Search Menu</mat-label>
+
+      <input
+        matInput
+        [(ngModel)]="query.search"
+        (ngModelChange)="onSearch()"
+        placeholder="Search by name, category or description...">
+
+    </mat-form-field>
+
+    <!-- Category -->
+
+    <mat-form-field appearance="outline">
+
+      <mat-label>Category</mat-label>
+
+      <mat-select
+        [(ngModel)]="query.categoryId"
+        (selectionChange)="onCategoryChange()">
+
+        <mat-option [value]="null">
+
+          All Categories
+
+        </mat-option>
+
+        <mat-option
+          *ngFor="let category of categories"
+          [value]="category.id">
+
+          {{ category.name }}
+
+        </mat-option>
+
+      </mat-select>
+
+    </mat-form-field>
+
+    <!-- Availability -->
+
+    <mat-form-field appearance="outline">
+
+      <mat-label>Availability</mat-label>
+
+      <mat-select
+        [(ngModel)]="query.available"
+        (selectionChange)="onAvailabilityChange()">
+
+        <mat-option [value]="null">
+
+          All
+
+        </mat-option>
+
+        <mat-option [value]="true">
+
+          Available
+
+        </mat-option>
+
+        <mat-option [value]="false">
+
+          Unavailable
+
+        </mat-option>
+
+      </mat-select>
+
+    </mat-form-field>
+
+    <!-- Clear Filters -->
+
+    <button
+      mat-stroked-button
+      color="primary"
+      (click)="clearFilters()">
+
+      Clear Filters
+
+    </button>
+
+  </div>
+
+  <!-- ========================= -->
+  <!-- Loading -->
+  <!-- ========================= -->
 
   <div
     class="loading-container"
     *ngIf="loading">
 
-    <mat-spinner
-      diameter="50">
-    </mat-spinner>
+    <mat-spinner diameter="50"></mat-spinner>
 
     <p>Loading menu items...</p>
 
   </div>
 
+  <!-- ========================= -->
   <!-- Empty State -->
+  <!-- ========================= -->
 
   <div
     class="empty-state"
@@ -53,7 +137,9 @@
 
   </div>
 
-  <!-- Menu Table -->
+  <!-- ========================= -->
+  <!-- Table -->
+  <!-- ========================= -->
 
   <table
     *ngIf="!loading && menuItems.length > 0"
@@ -193,7 +279,9 @@
 
   </table>
 
+  <!-- ========================= -->
   <!-- Paginator -->
+  <!-- ========================= -->
 
   <mat-paginator
     *ngIf="!loading && menuItems.length > 0"
@@ -202,6 +290,7 @@
     [pageIndex]="query.page"
     [pageSizeOptions]="[5, 10, 20]"
     (page)="onPageChange($event)">
+
   </mat-paginator>
 
 </div>

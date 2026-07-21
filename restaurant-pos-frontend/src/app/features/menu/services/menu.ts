@@ -31,6 +31,20 @@ export class Menu {
       params = params.set('search', query.search);
     }
 
+    if (query.categoryId !== null) {
+      params = params.set(
+        'categoryId',
+        query.categoryId.toString()
+      );
+    }
+
+    if (query.available !== null) {
+      params = params.set(
+        'available',
+        query.available.toString()
+      );
+    }
+
     return this.http.get<PageResponse<MenuItem>>(
       this.apiUrl,
       { params }

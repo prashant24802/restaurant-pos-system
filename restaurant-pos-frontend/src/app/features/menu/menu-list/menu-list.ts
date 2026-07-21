@@ -21,6 +21,7 @@ import {
   Sort
 } from '@angular/material/sort';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatSelectModule } from '@angular/material/select';
 
 import {
   Subject,
@@ -32,8 +33,11 @@ import { MenuFormDialog } from '../menu-form-dialog/menu-form-dialog';
 import { ConfirmationDialog } from '../../../shared/confirmation-dialog/confirmation-dialog';
 
 import { Menu } from '../services/menu';
+import { CategoryService } from '../services/category';
+
 import { MenuItem } from '../models/menu-item';
 import { MenuQuery } from '../models/menu-query';
+import { Category } from '../models/category';
 
 @Component({
   selector: 'app-menu-list',
@@ -50,7 +54,8 @@ import { MenuQuery } from '../models/menu-query';
     MatSnackBarModule,
     MatPaginatorModule,
     MatSortModule,
-    MatProgressSpinnerModule
+    MatProgressSpinnerModule,
+    MatSelectModule
   ],
   templateUrl: './menu-list.html',
   styleUrl: './menu-list.css'
@@ -58,12 +63,15 @@ import { MenuQuery } from '../models/menu-query';
 export class MenuList implements OnInit {
 
   private menuService = inject(Menu);
+  private categoryService = inject(CategoryService);
   private dialog = inject(MatDialog);
   private snackBar = inject(MatSnackBar);
 
   private searchSubject = new Subject<string>();
 
   menuItems: MenuItem[] = [];
+
+  categories: Category[] = [];
 
   displayedColumns = [
     'id',
@@ -77,6 +85,8 @@ export class MenuList implements OnInit {
     page: 0,
     size: 5,
     search: '',
+    categoryId: null,
+    available: null,
     sort: 'name',
     direction: 'asc'
   };
@@ -86,6 +96,8 @@ export class MenuList implements OnInit {
   loading = false;
 
   ngOnInit(): void {
+
+    this.loadCategories();
 
     this.loadData();
 
@@ -101,6 +113,26 @@ export class MenuList implements OnInit {
         this.loadData();
 
       });
+
+  }
+
+  loadCategories(): void {
+
+    this.categoryService.getAll().subscribe({
+
+      next: (categories) => {
+
+        this.categories = categories;
+
+      },
+
+      error: (err) => {
+
+        console.error(err);
+
+      }
+
+    });
 
   }
 
@@ -140,9 +172,39 @@ export class MenuList implements OnInit {
 
   }
 
-  onSearch(): void {
+    onSearch(): void {
 
     this.searchSubject.next(this.query.search);
+
+  }
+
+  onCategoryChange(): void {
+
+    this.query.page = 0;
+
+    this.loadData();
+
+  }
+
+  onAvailabilityChange(): void {
+
+    this.query.page = 0;
+
+    this.loadData();
+
+  }
+
+  clearFilters(): void {
+
+    this.query.search = '';
+
+    this.query.categoryId = null;
+
+    this.query.available = null;
+
+    this.query.page = 0;
+
+    this.loadData();
 
   }
 
@@ -178,7 +240,9 @@ export class MenuList implements OnInit {
   openAddDialog(): void {
 
     const dialogRef = this.dialog.open(MenuFormDialog, {
+
       width: '500px'
+
     });
 
     dialogRef.afterClosed().subscribe(result => {
@@ -196,8 +260,11 @@ export class MenuList implements OnInit {
   editItem(item: MenuItem): void {
 
     const dialogRef = this.dialog.open(MenuFormDialog, {
+
       width: '500px',
+
       data: item
+
     });
 
     dialogRef.afterClosed().subscribe(result => {
@@ -241,11 +308,17 @@ export class MenuList implements OnInit {
         next: () => {
 
           this.snackBar.open(
+
             'Menu item deleted successfully',
+
             'Close',
+
             {
+
               duration: 3000
+
             }
+
           );
 
           this.loadData();
@@ -257,11 +330,17 @@ export class MenuList implements OnInit {
           console.error(err);
 
           this.snackBar.open(
+
             'Failed to delete menu item',
+
             'Close',
+
             {
+
               duration: 3000
+
             }
+
           );
 
         }

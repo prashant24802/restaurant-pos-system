@@ -1,4 +1,6 @@
-export interface MenuQuery {
+import { TableStatus } from './table';
+
+export interface TableQuery {
 
   page: number;
 
@@ -6,9 +8,7 @@ export interface MenuQuery {
 
   search: string;
 
-  categoryId: number | null;
-
-  available: boolean | null;
+  status: TableStatus | null;
 
   sort: string;
 

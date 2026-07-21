@@ -1,0 +1,101 @@
+<h2 mat-dialog-title>
+  {{ isEdit ? 'Edit Table' : 'Add Table' }}
+</h2>
+
+<mat-dialog-content>
+
+  <form [formGroup]="form">
+
+    <!-- Table Number -->
+
+    <mat-form-field
+      appearance="outline"
+      style="width: 100%; margin-top: 10px;">
+
+      <mat-label>Table Number</mat-label>
+
+      <input
+        matInput
+        type="number"
+        min="1"
+        formControlName="tableNumber"
+        placeholder="Enter table number">
+
+      <mat-error
+        *ngIf="form.get('tableNumber')?.hasError('required')">
+
+        Table number is required
+
+      </mat-error>
+
+      <mat-error
+        *ngIf="form.get('tableNumber')?.hasError('min')">
+
+        Table number must be at least 1
+
+      </mat-error>
+
+    </mat-form-field>
+
+    <!-- Capacity -->
+
+    <mat-form-field
+      appearance="outline"
+      style="width: 100%;">
+
+      <mat-label>Capacity</mat-label>
+
+      <input
+        matInput
+        type="number"
+        min="1"
+        formControlName="capacity"
+        placeholder="Enter seating capacity">
+
+      <mat-error
+        *ngIf="form.get('capacity')?.hasError('required')">
+
+        Capacity is required
+
+      </mat-error>
+
+      <mat-error
+        *ngIf="form.get('capacity')?.hasError('min')">
+
+        Capacity must be at least 1
+
+      </mat-error>
+
+    </mat-form-field>
+
+  </form>
+
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+
+  <button
+    mat-button
+    type="button"
+    [disabled]="saving"
+    (click)="cancel()">
+
+    Cancel
+
+  </button>
+
+  <button
+    mat-raised-button
+    color="primary"
+    type="button"
+    [disabled]="saving"
+    (click)="save()">
+
+    {{ saving
+      ? 'Saving...'
+      : (isEdit ? 'Update Table' : 'Add Table')
+    }}
+
+  </button>
+
+</mat-dialog-actions>
