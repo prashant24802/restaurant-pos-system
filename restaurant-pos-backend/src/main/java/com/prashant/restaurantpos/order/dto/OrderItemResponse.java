@@ -11,6 +11,8 @@ public class OrderItemResponse {
 
     private Long id;
 
+    private Long menuItemId;
+
     private String menuItemName;
 
     private Integer quantity;
@@ -18,4 +20,5 @@ public class OrderItemResponse {
     private BigDecimal price;
 
     private BigDecimal subtotal;
+
 }

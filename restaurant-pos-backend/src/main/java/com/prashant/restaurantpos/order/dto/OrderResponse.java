@@ -1,6 +1,7 @@
 package com.prashant.restaurantpos.order.dto;
 
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.util.List;
 
 import com.prashant.restaurantpos.order.entity.OrderStatus;
@@ -14,11 +15,20 @@ public class OrderResponse {
 
     private Long id;
 
+    private Long tableId;
+
     private Integer tableNumber;
 
     private OrderStatus status;
 
+    private BigDecimal subtotal;
+
+    private BigDecimal tax;
+
     private BigDecimal totalAmount;
 
+    private LocalDateTime createdAt;
+
     private List<OrderItemResponse> items;
+
 }

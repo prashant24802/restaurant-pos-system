@@ -8,4 +8,5 @@ public class CreateOrderRequest {
 
     @NotNull
     private Long tableId;
+
 }
