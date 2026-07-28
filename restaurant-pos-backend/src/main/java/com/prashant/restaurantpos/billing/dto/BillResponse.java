@@ -1,26 +1,46 @@
 package com.prashant.restaurantpos.billing.dto;
 
 import java.math.BigDecimal;
-import java.util.List;
+import java.time.LocalDateTime;
 
-import com.prashant.restaurantpos.order.dto.OrderItemResponse;
+import com.prashant.restaurantpos.billing.enums.PaymentMethod;
+import com.prashant.restaurantpos.billing.enums.PaymentStatus;
 
+import lombok.AllArgsConstructor;
 import lombok.Builder;
-import lombok.Data;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
-@Data
+@Getter
+@Setter
 @Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class BillResponse {
+
+    private Long id;
+
+    private String invoiceNumber;
 
     private Long orderId;
 
-    private Integer tableNumber;
-
-    private List<OrderItemResponse> items;
+    private String tableNumber;
 
     private BigDecimal subtotal;
 
     private BigDecimal tax;
 
-    private BigDecimal grandTotal;
+    private BigDecimal discount;
+
+    private BigDecimal totalAmount;
+
+    private PaymentMethod paymentMethod;
+
+    private PaymentStatus paymentStatus;
+
+    private LocalDateTime billedAt;
+
+    private LocalDateTime paidAt;
+
 }

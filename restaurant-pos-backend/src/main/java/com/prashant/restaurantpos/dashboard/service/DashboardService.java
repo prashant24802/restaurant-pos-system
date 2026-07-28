@@ -4,6 +4,6 @@ import com.prashant.restaurantpos.dashboard.dto.DashboardResponse;
 
 public interface DashboardService {
 
-    DashboardResponse getDashboard();
+    DashboardResponse getSummary();
 
 }

@@ -1,5 +1,7 @@
 package com.prashant.restaurantpos.table.repository;
 
+import java.util.List;
+
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 
@@ -13,5 +15,7 @@ public interface RestaurantTableRepository
     boolean existsByTableNumber(Integer tableNumber);
 
     long countByStatus(TableStatus status);
+
+    List<RestaurantTable> findByStatus(TableStatus status);
 
 }

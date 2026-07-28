@@ -1,5 +1,7 @@
 package com.prashant.restaurantpos.table.service;
 
+import java.util.List;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -61,6 +63,21 @@ public class RestaurantTableServiceImpl
                 pageable)
 
                 .map(this::mapToResponse);
+
+    }
+
+    @Override
+    public List<TableResponse> getAvailableTables() {
+
+        return tableRepository
+
+                .findByStatus(TableStatus.AVAILABLE)
+
+                .stream()
+
+                .map(this::mapToResponse)
+
+                .toList();
 
     }
 

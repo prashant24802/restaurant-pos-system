@@ -19,6 +19,6 @@ public class DashboardController {
 
     @GetMapping
     public DashboardResponse getDashboard() {
-        return dashboardService.getDashboard();
+        return dashboardService.getSummary();
     }
 }

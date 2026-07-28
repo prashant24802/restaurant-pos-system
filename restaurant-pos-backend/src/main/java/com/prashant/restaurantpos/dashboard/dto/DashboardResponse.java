@@ -1,21 +1,28 @@
 package com.prashant.restaurantpos.dashboard.dto;
 
+import lombok.*;
+
 import java.math.BigDecimal;
 
-import lombok.Builder;
-import lombok.Data;
-
-@Data
+@Getter
+@Setter
 @Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class DashboardResponse {
 
-    private long totalOrders;
+    private BigDecimal todayRevenue;
 
-    private long activeOrders;
+    private Long todayOrders;
 
-    private long availableTables;
+    private Long paidBills;
 
-    private long occupiedTables;
+    private Long pendingBills;
 
-    private BigDecimal totalRevenue;
+    private Long availableTables;
+
+    private Long occupiedTables;
+
+    private Long totalMenuItems;
+
 }

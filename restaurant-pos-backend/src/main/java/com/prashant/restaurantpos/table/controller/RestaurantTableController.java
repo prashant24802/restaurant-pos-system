@@ -1,5 +1,7 @@
 package com.prashant.restaurantpos.table.controller;
 
+import java.util.List;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
@@ -58,6 +60,13 @@ public class RestaurantTableController {
                 pageable
 
         );
+
+    }
+
+    @GetMapping("/available")
+    public List<TableResponse> getAvailableTables() {
+
+        return tableService.getAvailableTables();
 
     }
 

@@ -21,12 +21,13 @@ public class DashboardServiceImpl implements DashboardService {
     private final RestaurantTableRepository tableRepository;
 
     @Override
-    public DashboardResponse getDashboard() {
+    public DashboardResponse getSummary() {
 
-        long totalOrders = orderRepository.count();
+        long todayOrders = orderRepository.count();
 
-        long activeOrders =
-                orderRepository.countByStatusNot(OrderStatus.PAID);
+        long pendingBills = orderRepository.countByStatusNot(OrderStatus.PAID);
+
+        long paidBills = todayOrders - pendingBills;
 
         long availableTables =
                 tableRepository.countByStatus(TableStatus.AVAILABLE);
@@ -34,7 +35,7 @@ public class DashboardServiceImpl implements DashboardService {
         long occupiedTables =
                 tableRepository.countByStatus(TableStatus.OCCUPIED);
 
-        BigDecimal totalRevenue =
+        BigDecimal todayRevenue =
                 orderRepository.findAll()
                         .stream()
                         .filter(order -> order.getStatus() == OrderStatus.PAID)
@@ -42,11 +43,13 @@ public class DashboardServiceImpl implements DashboardService {
                         .reduce(BigDecimal.ZERO, BigDecimal::add);
 
         return DashboardResponse.builder()
-                .totalOrders(totalOrders)
-                .activeOrders(activeOrders)
+                .todayRevenue(todayRevenue)
+                .todayOrders(todayOrders)
+                .paidBills(paidBills)
+                .pendingBills(pendingBills)
                 .availableTables(availableTables)
                 .occupiedTables(occupiedTables)
-                .totalRevenue(totalRevenue)
+                .totalMenuItems(0L) // Replace with menuRepository.count() later
                 .build();
     }
 }

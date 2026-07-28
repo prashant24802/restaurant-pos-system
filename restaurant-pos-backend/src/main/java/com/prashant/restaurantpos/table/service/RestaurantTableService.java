@@ -1,5 +1,7 @@
 package com.prashant.restaurantpos.table.service;
 
+import java.util.List;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
@@ -15,6 +17,8 @@ public interface RestaurantTableService {
             String search,
             TableStatus status,
             Pageable pageable);
+
+    List<TableResponse> getAvailableTables();
 
     TableResponse getById(Long id);
 
