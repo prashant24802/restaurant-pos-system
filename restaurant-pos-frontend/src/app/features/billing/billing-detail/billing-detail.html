@@ -1,0 +1,159 @@
+@if (loading) {
+<div class="loading-container">
+  <mat-spinner></mat-spinner>
+</div>
+}
+@else if (error) {
+<mat-card>
+  <h2>{{ error }}</h2>
+</mat-card>
+}
+@else if (bill) {
+
+<div class="invoice-container">
+
+  <mat-card class="invoice-header">
+
+    <div class="header-row">
+      <div>
+        <h1>Invoice</h1>
+        <h2>{{ bill.invoiceNumber }}</h2>
+      </div>
+
+      <mat-chip>
+        {{ bill.paymentStatus }}
+      </mat-chip>
+    </div>
+
+    <div class="details">
+      <p><strong>Order:</strong> #{{ bill.orderId }}</p>
+      <p><strong>Table:</strong> {{ bill.tableNumber }}</p>
+      <p>
+        <strong>Billed:</strong>
+        {{ bill.billedAt | date:'medium' }}
+      </p>
+
+      @if (bill.paidAt) {
+      <p>
+        <strong>Paid:</strong>
+        {{ bill.paidAt | date:'medium' }}
+      </p>
+      }
+
+    </div>
+
+  </mat-card>
+
+  <mat-card>
+
+    <h2>Ordered Items</h2>
+
+    <table mat-table [dataSource]="bill.items">
+
+      <ng-container matColumnDef="item">
+        <th mat-header-cell *matHeaderCellDef>Item</th>
+        <td mat-cell *matCellDef="let item">
+          {{ item.itemName }}
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="qty">
+        <th mat-header-cell *matHeaderCellDef>Qty</th>
+        <td mat-cell *matCellDef="let item">
+          {{ item.quantity }}
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="price">
+        <th mat-header-cell *matHeaderCellDef>Unit Price</th>
+        <td mat-cell *matCellDef="let item">
+          {{ item.unitPrice | currency:'INR' }}
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="total">
+        <th mat-header-cell *matHeaderCellDef>Total</th>
+        <td mat-cell *matCellDef="let item">
+          {{ item.total | currency:'INR' }}
+        </td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+
+    </table>
+
+  </mat-card>
+
+  <mat-card class="summary-card">
+
+    <h2>Bill Summary</h2>
+
+    <div class="summary-row">
+      <span>Subtotal</span>
+      <span>{{ bill.subtotal | currency:'INR' }}</span>
+    </div>
+
+    <div class="summary-row">
+      <span>Tax</span>
+      <span>{{ bill.tax | currency:'INR' }}</span>
+    </div>
+
+    <div class="summary-row">
+      <span>Discount</span>
+      <span>{{ bill.discount | currency:'INR' }}</span>
+    </div>
+
+    <hr>
+
+    <div class="summary-row total">
+      <span>Total</span>
+      <span>{{ bill.totalAmount | currency:'INR' }}</span>
+    </div>
+
+  </mat-card>
+
+  @if (bill.paymentStatus !== 'PAID') {
+
+  <mat-card>
+
+    <h2>Payment</h2>
+
+    <mat-radio-group [(ngModel)]="paymentMethod">
+
+      <mat-radio-button value="CASH">
+        Cash
+      </mat-radio-button>
+
+      <br><br>
+
+      <mat-radio-button value="CARD">
+        Card
+      </mat-radio-button>
+
+      <br><br>
+
+      <mat-radio-button value="UPI">
+        UPI
+      </mat-radio-button>
+
+    </mat-radio-group>
+
+    <br><br>
+
+    <button
+      mat-raised-button
+      color="primary"
+      (click)="markPaid()">
+
+      Mark Paid
+
+    </button>
+
+  </mat-card>
+
+  }
+
+</div>
+
+}

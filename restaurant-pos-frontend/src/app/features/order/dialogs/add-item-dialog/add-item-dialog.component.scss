@@ -1,0 +1,15 @@
+.full-width {
+  width: 100%;
+}
+
+.loading {
+  display: flex;
+  justify-content: center;
+  padding: 24px;
+}
+
+.empty {
+  text-align: center;
+  color: gray;
+  margin-top: 16px;
+}

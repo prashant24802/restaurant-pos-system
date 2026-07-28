@@ -1,0 +1,25 @@
+.full-width {
+  width: 100%;
+}
+
+.loading-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 140px;
+}
+
+.empty-state {
+  margin-top: 20px;
+  text-align: center;
+  color: #888;
+  font-style: italic;
+}
+
+mat-dialog-content {
+  min-width: 420px;
+}
+
+mat-dialog-actions {
+  margin-top: 16px;
+}

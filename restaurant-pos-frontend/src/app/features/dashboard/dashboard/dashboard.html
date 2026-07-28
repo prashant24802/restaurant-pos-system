@@ -1,3 +1,56 @@
-<h2>Welcome to Restaurant-POS</h2>
+<h2>Restaurant POS Dashboard</h2>
 
-<p>You have successfully logged in.</p>
+@if (loading) {
+
+    <p>Loading dashboard...</p>
+
+}
+
+@else if (error) {
+
+    <p>{{ error }}</p>
+
+}
+
+@else if (summary) {
+
+<div class="dashboard-grid">
+
+    <div class="card">
+        <h3>Today's Revenue</h3>
+        <p>₹ {{ summary.todayRevenue }}</p>
+    </div>
+
+    <div class="card">
+        <h3>Today's Orders</h3>
+        <p>{{ summary.todayOrders }}</p>
+    </div>
+
+    <div class="card">
+        <h3>Paid Bills</h3>
+        <p>{{ summary.paidBills }}</p>
+    </div>
+
+    <div class="card">
+        <h3>Pending Bills</h3>
+        <p>{{ summary.pendingBills }}</p>
+    </div>
+
+    <div class="card">
+        <h3>Available Tables</h3>
+        <p>{{ summary.availableTables }}</p>
+    </div>
+
+    <div class="card">
+        <h3>Occupied Tables</h3>
+        <p>{{ summary.occupiedTables }}</p>
+    </div>
+
+    <div class="card">
+        <h3>Total Menu Items</h3>
+        <p>{{ summary.totalMenuItems }}</p>
+    </div>
+
+</div>
+
+}

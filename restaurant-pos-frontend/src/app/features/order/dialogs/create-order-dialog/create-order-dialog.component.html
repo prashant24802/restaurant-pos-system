@@ -1,0 +1,86 @@
+<h2 mat-dialog-title>
+  Create Order
+</h2>
+
+<mat-dialog-content>
+
+  <div
+    class="loading-container"
+    *ngIf="loading">
+
+    <mat-spinner
+      diameter="40">
+    </mat-spinner>
+
+  </div>
+
+  <form
+    *ngIf="!loading && form"
+    [formGroup]="form">
+
+    <mat-form-field
+      appearance="outline"
+      class="full-width">
+
+      <mat-label>
+        Select Table
+      </mat-label>
+
+      <mat-select
+        formControlName="tableId">
+
+        <mat-option
+          *ngFor="let table of tables"
+          [value]="table.id">
+
+          Table {{ table.tableNumber }}
+          ({{ table.capacity }} Seats)
+
+        </mat-option>
+
+      </mat-select>
+
+      <mat-error
+        *ngIf="form.get('tableId')?.hasError('required')">
+
+        Please select a table.
+
+      </mat-error>
+
+    </mat-form-field>
+
+    <div
+      class="empty-state"
+      *ngIf="!tables.length">
+
+      No available tables found.
+
+    </div>
+
+  </form>
+
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+
+  <button
+    mat-button
+    type="button"
+    (click)="close()">
+
+    Cancel
+
+  </button>
+
+  <button
+    mat-flat-button
+    color="primary"
+    type="button"
+    [disabled]="!form || form.invalid || creating || !tables.length"
+    (click)="create()">
+
+    Create Order
+
+  </button>
+
+</mat-dialog-actions>

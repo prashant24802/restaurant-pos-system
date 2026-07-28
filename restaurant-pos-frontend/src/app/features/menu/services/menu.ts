@@ -5,6 +5,7 @@ import {
 } from '@angular/common/http';
 
 import { Observable } from 'rxjs';
+import { map } from 'rxjs';
 
 import { MenuItem } from '../models/menu-item';
 import { MenuItemRequest } from '../models/menu-item-request';
@@ -48,6 +49,22 @@ export class Menu {
     return this.http.get<PageResponse<MenuItem>>(
       this.apiUrl,
       { params }
+    );
+
+  }
+
+  getAvailable(): Observable<MenuItem[]> {
+
+    const params = new HttpParams()
+      .set('available', 'true')
+      .set('page', '0')
+      .set('size', '1000');
+
+    return this.http.get<PageResponse<MenuItem>>(
+      this.apiUrl,
+      { params }
+    ).pipe(
+      map((response: PageResponse<MenuItem>) => response.content)
     );
 
   }

@@ -1,0 +1,46 @@
+.invoice-container {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+    padding: 24px;
+}
+
+.invoice-header {
+    padding: 24px;
+}
+
+.header-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.details {
+    margin-top: 16px;
+}
+
+table {
+    width: 100%;
+}
+
+.summary-card {
+    max-width: 420px;
+    margin-left: auto;
+}
+
+.summary-row {
+    display: flex;
+    justify-content: space-between;
+    margin: 12px 0;
+}
+
+.total {
+    font-size: 20px;
+    font-weight: bold;
+}
+
+.loading-container {
+    display: flex;
+    justify-content: center;
+    margin-top: 80px;
+}

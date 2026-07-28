@@ -1,15 +1,10 @@
 import { Routes } from '@angular/router';
 
 import { Login } from './features/auth/login/login';
-
 import { MainLayout } from './layout/main-layout/main-layout';
-
 import { Dashboard } from './features/dashboard/dashboard/dashboard';
-
 import { authGuard } from './core/guards/auth-guard';
-
 import { MenuList } from './features/menu/menu-list/menu-list';
-
 import { TableList } from './features/table/table-list/table-list';
 
 export const routes: Routes = [
@@ -21,9 +16,7 @@ export const routes: Routes = [
 
   {
     path: 'dashboard',
-
     component: MainLayout,
-
     canActivate: [authGuard],
 
     children: [
@@ -34,6 +27,13 @@ export const routes: Routes = [
       },
 
       {
+  path: 'billing',
+  loadChildren: () =>
+    import('./features/billing/billing.routes')
+      .then(m => m.BILLING_ROUTES)
+},
+
+      {
         path: 'menu',
         component: MenuList
       },
@@ -41,10 +41,16 @@ export const routes: Routes = [
       {
         path: 'tables',
         component: TableList
+      },
+
+      {
+        path: 'orders',
+        loadChildren: () =>
+          import('./features/order/orders.module')
+            .then(m => m.OrdersModule)
       }
 
     ]
-
   }
 
 ];

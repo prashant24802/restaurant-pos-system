@@ -77,6 +77,14 @@ export class TableService {
 
   }
 
+  getAvailable(): Observable<RestaurantTable[]> {
+
+    return this.http.get<RestaurantTable[]>(
+      `${this.apiUrl}/available`
+    );
+
+  }
+
   getById(
     id: number
   ): Observable<RestaurantTable> {
