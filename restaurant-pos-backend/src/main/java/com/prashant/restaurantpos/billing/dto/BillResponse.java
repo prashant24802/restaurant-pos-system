@@ -2,6 +2,7 @@ package com.prashant.restaurantpos.billing.dto;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.List;
 
 import com.prashant.restaurantpos.billing.enums.PaymentMethod;
 import com.prashant.restaurantpos.billing.enums.PaymentStatus;
@@ -42,5 +43,7 @@ public class BillResponse {
     private LocalDateTime billedAt;
 
     private LocalDateTime paidAt;
+
+    private List<BillItemResponse> items;
 
 }

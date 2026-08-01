@@ -1,11 +1,13 @@
 package com.prashant.restaurantpos.billing.service;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
 import org.springframework.stereotype.Service;
 
+import com.prashant.restaurantpos.billing.dto.BillItemResponse;
 import com.prashant.restaurantpos.billing.dto.BillResponse;
 import com.prashant.restaurantpos.billing.dto.PaymentRequest;
 import com.prashant.restaurantpos.billing.entity.Bill;
@@ -53,25 +55,41 @@ public class BillingServiceImpl implements BillingService {
 
     private BillResponse toResponse(Bill bill) {
 
-        return BillResponse.builder()
-                .id(bill.getId())
-                .invoiceNumber(bill.getInvoiceNumber())
-                .orderId(bill.getOrder().getId())
-                .tableNumber(
-                        String.valueOf(
-                                bill.getOrder()
-                                        .getTable()
-                                        .getTableNumber()))
-                .subtotal(bill.getSubtotal())
-                .tax(bill.getTax())
-                .discount(bill.getDiscount())
-                .totalAmount(bill.getTotalAmount())
-                .paymentMethod(bill.getPaymentMethod())
-                .paymentStatus(bill.getPaymentStatus())
-                .billedAt(bill.getBilledAt())
-                .paidAt(bill.getPaidAt())
-                .build();
-    }
+    List<BillItemResponse> items = bill.getOrder()
+            .getItems()
+            .stream()
+            .map(item -> BillItemResponse.builder()
+                    .itemName(item.getMenuItem().getName())
+                    .quantity(item.getQuantity())
+                    .unitPrice(item.getPrice())
+                    .total(
+                            item.getPrice().multiply(
+                                    BigDecimal.valueOf(item.getQuantity())
+                            )
+                    )
+                    .build())
+            .toList();
+
+    return BillResponse.builder()
+            .id(bill.getId())
+            .invoiceNumber(bill.getInvoiceNumber())
+            .orderId(bill.getOrder().getId())
+            .tableNumber(
+                    String.valueOf(
+                            bill.getOrder()
+                                    .getTable()
+                                    .getTableNumber()))
+            .subtotal(bill.getSubtotal())
+            .tax(bill.getTax())
+            .discount(bill.getDiscount())
+            .totalAmount(bill.getTotalAmount())
+            .paymentMethod(bill.getPaymentMethod())
+            .paymentStatus(bill.getPaymentStatus())
+            .billedAt(bill.getBilledAt())
+            .paidAt(bill.getPaidAt())
+            .items(items)
+            .build();
+}
     @Override
 public BillResponse getBill(Long billId) {
 
@@ -90,6 +108,7 @@ public List<BillResponse> getAllBills() {
             .map(this::toResponse)
             .toList();
 }
+
 
 @Override
 public BillResponse getBillByOrder(Long orderId) {
