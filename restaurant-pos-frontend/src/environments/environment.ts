@@ -1,3 +1,3 @@
 export const environment = {
-  apiUrl: 'http://localhost:8080/api'
+  apiUrl: 'https://restaurant-pos-system-production-df87.up.railway.app'
 };
