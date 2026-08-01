@@ -5,6 +5,8 @@ import { Observable } from 'rxjs';
 
 import { Dashboard } from '../models/dashboard';
 
+import { environment } from '../../../environments/environment';
+
 @Injectable({
   providedIn: 'root'
 })
@@ -13,7 +15,7 @@ export class DashboardService {
   private http = inject(HttpClient);
 
   private readonly api =
-    'http://localhost:8080/api/dashboard';
+    '${environment.apiUrl}/api/dashboard';
 
   getSummary(): Observable<Dashboard> {
 

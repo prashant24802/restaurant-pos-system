@@ -13,6 +13,8 @@ import {
 
 import { TableQuery } from '../models/table-query';
 
+import { environment } from '../../../../environments/environment';
+
 export interface PageResponse<T> {
 
   content: T[];
@@ -38,7 +40,7 @@ export class TableService {
 
   private http = inject(HttpClient);
 
-  private apiUrl = 'http://localhost:8080/api/tables';
+  private apiUrl = `${environment.apiUrl}/api/tables`;
 
   getPage(
     query: TableQuery

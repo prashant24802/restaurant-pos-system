@@ -3,7 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
 import { Bill, PaymentMethod } from './billing.model';
-
+import { environment } from '../../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
@@ -12,7 +12,7 @@ export class BillingService {
 
   private http = inject(HttpClient);
 
-  private api = 'http://localhost:8080/api/bills';
+  private api = `${environment.apiUrl}/api/billing`;
 
   getBills(): Observable<Bill[]> {
     return this.http.get<Bill[]>(this.api);

@@ -11,6 +11,7 @@ import { MenuItem } from '../models/menu-item';
 import { MenuItemRequest } from '../models/menu-item-request';
 import { PageResponse } from '../models/page-response';
 import { MenuQuery } from '../models/menu-query';
+import { environment } from '../../../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
@@ -19,7 +20,7 @@ export class Menu {
 
   private http = inject(HttpClient);
 
-  private apiUrl = 'http://localhost:8080/api/menu/items';
+  private apiUrl = `${environment.apiUrl}/api/menu/items`;
 
   getPage(query: MenuQuery): Observable<PageResponse<MenuItem>> {
 
